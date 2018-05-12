@@ -1,0 +1,31 @@
+{
+	"name": "articles-api",
+	"version": "0.0.1",
+	"description": "REST API to manage users and articles.",
+	"main": "server.js",
+	"scripts": {
+		"start": "NODE_ENV=dev node server.js",
+		"test": "NODE_ENV=test mocha --timeout 5000 --exit"
+	},
+	"keywords": [
+		"Express",
+		"RestAPI",
+		"MongoDB",
+		"Mongoose",
+		"Articles"
+	],
+	"author": "Jonathan Chiocchio",
+	"license": "MIT",
+	"dependencies": {
+		"body-parser": "^1.18.2",
+		"express": "^4.16.3",
+		"express-validation": "^1.0.2",
+		"joi": "^13.3.0",
+		"mongoose": "^5.1.0",
+		"mongoose-type-url": "^1.0.2",
+		"morgan": "^1.9.0",
+		"morgan-body": "^2.4.0",
+		"swagger-ui-express": "^3.0.8",
+		"winston": "^2.4.2"
+	}
+}

@@ -1,0 +1,91 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1",
+		"userId": "Articles API",
+		"description": "Simple REST API to manage users and articles."
+	},
+	"basePath": "/",
+	"schemes": [
+		"http"
+	],
+	"consumes": [
+		"application/json"
+	],
+	"produces": [
+		"application/json"
+	],
+	"paths": {
+		"/users": {
+			"post": {
+				"description": "Creates a User",
+				"parameters": [
+					{
+						"name": "payload",
+						"in": "body",
+						"description": "JSON Payload",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
+			}
+		},
+		"/status": {
+			"get": {
+				"description": "Reports basic status data about the state of this microservice.",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"examples": {
+							"online": true,
+							"uptime": "2 minutes"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"User": {
+			"type": "object",
+			"required": true,
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "User's name.",
+					"required": true
+				},
+				"avatar": {
+					"type": "string",
+					"description": "A URL pointing to the User's avatar.",
+					"required": false
+				}
+			}
+		}
+	},
+	"ErrorResponse": {
+		"properties": {
+			"message": {
+				"type": "string",
+				"description": "an explanatory text, informing about the nature of the error.",
+				"required": true
+			}
+		}
+	}
+}

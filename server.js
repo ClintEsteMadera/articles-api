@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const morganBody = require('morgan-body');
 const winston = require('winston');
+const _ = require('lodash');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const mongoose = require('mongoose');
@@ -26,15 +27,10 @@ if (env !== 'test') {
 	morganBody(app);
 }
 
-app.use(function (err, req, res, next) {
-	if (err instanceof expressValidation.ValidationError) return res.status(err.status).json(err.errors);
-
-	// other type of errors, it *might* also be a Runtime Error
-	if (env !== 'production') {
-		return res.status(500).send(err.stack);
-	} else {
-		return res.status(500);
-	}
+expressValidation.options({
+	allowUnknownBody: false,
+	allowUnknownQuery: false,
+	allowUnknownParams: false
 });
 
 mongoose.Promise = global.Promise;
@@ -44,6 +40,21 @@ tryDbConnection();
 statusRoutes(app);
 userRoutes(app);
 articlesRoutes(app);
+
+// Error handling: must be declared *after* all the routes have been defined
+app.use(function (err, req, res, next) {
+	if (err instanceof expressValidation.ValidationError) {
+		return res.status(err.status).json({
+			message: _.flatMap(err.errors, e => e.messages)
+		});
+	}
+	// other type of errors, it *might* also be a Runtime Error
+	if (env !== 'production') {
+		return res.status(500).send(err.stack);
+	} else {
+		return res.status(500);
+	}
+});
 
 // TODO Make http port configurable
 const httpPort = 3000;

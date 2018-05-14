@@ -18,7 +18,7 @@
 	"paths": {
 		"/users": {
 			"post": {
-				"description": "Create a User",
+				"summary": "Create a User",
 				"parameters": [
 					{
 						"name": "payload",
@@ -48,7 +48,7 @@
 		},
 		"/articles": {
 			"post": {
-				"description": "Create an Article",
+				"summary": "Create an Article",
 				"parameters": [
 					{
 						"name": "payload",
@@ -76,7 +76,7 @@
 				}
 			},
 			"get": {
-				"description": "Find all Articles",
+				"summary": "Find all Articles",
 				"responses": {
 					"200": {
 						"description": "Success",
@@ -98,7 +98,7 @@
 		},
 		"/articles/{id}": {
 			"put": {
-				"description": "Edit an Article",
+				"summary": "Edit an Article",
 				"parameters": [
 					{
 						"name": "id",
@@ -138,7 +138,7 @@
 				}
 			},
 			"delete": {
-				"description": "Delete an Article",
+				"summary": "Delete an Article",
 				"parameters": [
 					{
 						"name": "id",
@@ -158,11 +158,69 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"summary": "Find all Articles (from all users) that contain the given tag(s)",
+				"parameters": [
+					{
+						"name": "tags",
+						"in": "path",
+						"description": "Comma-separated tags that must be contained in all the results.",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Article"
+							}
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
+			}
+		},
+		"/articles/byTags/{tags}": {
+			"get": {
+				"summary": "Find all Articles (from all users) that contain the given tag(s)",
+				"parameters": [
+					{
+						"name": "tags",
+						"in": "path",
+						"description": "Comma-separated tags that must be contained in all the results.",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Article"
+							}
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
 			}
 		},
 		"/status": {
 			"get": {
-				"description": "Reports basic status data about the state of this microservice.",
+				"summary": "Reports basic status data about the state of this microservice.",
 				"responses": {
 					"200": {
 						"description": "Success",
@@ -224,8 +282,9 @@
 		"ErrorResponse": {
 			"properties": {
 				"message": {
+					"oneOf": ["string", "array"],
 					"type": "string",
-					"description": "an explanatory text, informing about the nature of the error.",
+					"description": "an explanatory text, in the form of a single string or an array of strings, informing about the nature of the error.",
 					"required": true
 				}
 			}

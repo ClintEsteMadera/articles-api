@@ -21,6 +21,7 @@
 		"express": "^4.16.3",
 		"express-validation": "^1.0.2",
 		"joi": "^13.3.0",
+		"lodash": "^4.17.10",
 		"mongoose": "^5.1.0",
 		"mongoose-type-url": "^1.0.2",
 		"morgan": "^1.9.0",

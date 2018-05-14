@@ -49,6 +49,19 @@ exports.delete = async (req, res) => {
 	}
 };
 
+exports.findAllArticlesContainingTags = async (req, res) => {
+	try {
+		const tags = req.params.tags.split(',');
+		// Looks for articles matching "all" tags. If we just want OR behavior, we'd replace "$all" with "$in"
+		const articles = await Article.find({
+			tags: { $all: tags }
+		});
+		res.status(200).send(articles);
+	} catch (err) {
+		res.status(500).send({message: err.message || "Unknown error while retrieving articles."});
+	}
+};
+
 exports.findAll = async (req, res) => {
 	try {
 		const articles = await Article.find();

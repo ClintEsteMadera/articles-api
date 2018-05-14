@@ -1,4 +1,6 @@
 module.exports = (app) => {
+	const startTime = new Date();
+
 	app.get("/status", async (req, res) => {
 		let uptime = Math.round((new Date() - startTime) / 1000 / 60);
 		let displayableUpTime = uptime <= 1 ? "1 minute" : `${uptime} minutes`;

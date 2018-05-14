@@ -4,7 +4,7 @@ exports.create = async (req, res) => {
 	const user = new User(req.body);
 	try {
 		const savedUser = await user.save();
-		res.send(savedUser);
+		res.status(201).send(savedUser);
 	} catch (err) {
 		res.status(500).send({
 			message: err.message || "Unknown error while creating the User."

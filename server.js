@@ -1,4 +1,5 @@
 const express = require('express');
+const expressValidation = require('express-validation');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const morganBody = require('morgan-body');
@@ -10,6 +11,7 @@ const dbConfig = require('./config/database.config.js');
 
 const statusRoutes = require('./app/routes/status.routes.js');
 const userRoutes = require('./app/routes/user.routes.js');
+const articlesRoutes = require('./app/routes/article.routes.js');
 
 const app = express();
 
@@ -24,12 +26,24 @@ if (env !== 'test') {
 	morganBody(app);
 }
 
+app.use(function (err, req, res, next) {
+	if (err instanceof expressValidation.ValidationError) return res.status(err.status).json(err.errors);
+
+	// other type of errors, it *might* also be a Runtime Error
+	if (env !== 'production') {
+		return res.status(500).send(err.stack);
+	} else {
+		return res.status(500);
+	}
+});
+
 mongoose.Promise = global.Promise;
 
 tryDbConnection();
 
 statusRoutes(app);
 userRoutes(app);
+articlesRoutes(app);
 
 // TODO Make http port configurable
 const httpPort = 3000;

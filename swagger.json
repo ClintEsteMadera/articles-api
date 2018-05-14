@@ -2,7 +2,7 @@
 	"swagger": "2.0",
 	"info": {
 		"version": "1",
-		"userId": "Articles API",
+		"title": "Articles API",
 		"description": "Simple REST API to manage users and articles."
 	},
 	"basePath": "/",
@@ -18,7 +18,7 @@
 	"paths": {
 		"/users": {
 			"post": {
-				"description": "Creates a User",
+				"description": "Create a User",
 				"parameters": [
 					{
 						"name": "payload",
@@ -31,14 +31,128 @@
 					}
 				],
 				"responses": {
-					"200": {
+					"201": {
 						"description": "Success",
 						"schema": {
 							"$ref": "#/definitions/User"
 						}
 					},
-					"default": {
-						"description": "Error",
+					"500": {
+						"description": "Generic (Server) Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
+			}
+		},
+		"/articles": {
+			"post": {
+				"description": "Create an Article",
+				"parameters": [
+					{
+						"name": "payload",
+						"in": "body",
+						"description": "JSON Payload",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Article"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/Article"
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
+			},
+			"get": {
+				"description": "Find all Articles",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Article"
+							}
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
+			}
+		},
+		"/articles/{id}": {
+			"put": {
+				"description": "Edit an Article",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "The ID of the Article to be edited",
+						"required": true
+					},
+					{
+						"name": "payload",
+						"in": "body",
+						"description": "The Article payload that will replace the existing one.",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Article"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/Article"
+						}
+					},
+					"404": {
+						"description": "Article not found",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "Delete an Article",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "The ID of the Article to be deleted",
+						"required": true
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Success"
+					},
+					"500": {
+						"description": "Generic (Server) Error",
 						"schema": {
 							"$ref": "#/definitions/ErrorResponse"
 						}
@@ -77,14 +191,43 @@
 					"required": false
 				}
 			}
-		}
-	},
-	"ErrorResponse": {
-		"properties": {
-			"message": {
-				"type": "string",
-				"description": "an explanatory text, informing about the nature of the error.",
-				"required": true
+		},
+		"Article": {
+			"type": "object",
+			"required": true,
+			"properties": {
+				"userId": {
+					"type": "string",
+					"description": "Article's owner.",
+					"required": true
+				},
+				"title": {
+					"type": "string",
+					"description": "The Article's title",
+					"required": true
+				},
+				"text": {
+					"type": "string",
+					"description": "The Article's text",
+					"required": true
+				},
+				"tags": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The Article's tags. If the article has no tags, an empty array must be used.",
+					"required": true
+				}
+			}
+		},
+		"ErrorResponse": {
+			"properties": {
+				"message": {
+					"type": "string",
+					"description": "an explanatory text, informing about the nature of the error.",
+					"required": true
+				}
 			}
 		}
 	}

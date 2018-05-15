@@ -1,0 +1,337 @@
+{
+	"openapi": "3.0.0",
+	"servers": [
+		{
+			"url": "/"
+		}
+	],
+	"info": {
+		"version": "1",
+		"title": "Articles API",
+		"description": "Simple REST API to manage users and articles."
+	},
+	"security": {
+		"jwtAuth": []
+	},
+	"paths": {
+		"/users": {
+			"post": {
+				"summary": "Create a User",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/User"
+							}
+						}
+					},
+					"description": "JSON Payload",
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles": {
+			"post": {
+				"summary": "Create an Article",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Article"
+							}
+						}
+					},
+					"description": "JSON Payload",
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Article"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"summary": "Find all Articles",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Article"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/{id}": {
+			"put": {
+				"summary": "Edit an Article",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Article"
+							}
+						}
+					},
+					"description": "The Article payload that will replace the existing one.",
+					"required": true
+				},
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "The ID of the Article to be edited",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Article"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Article not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Delete an Article",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "The ID of the Article to be deleted",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Success"
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/byTags/{tags}": {
+			"get": {
+				"summary": "Find all Articles (from all users) that contain the given tag(s)",
+				"parameters": [
+					{
+						"name": "tags",
+						"in": "path",
+						"description": "Comma-separated tags that must be contained in all the results.",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Article"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Generic (Server) Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/status": {
+			"get": {
+				"summary": "Reports basic status data about the state of this microservice.",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"online": {
+								"examples": {
+									"response": {
+										"value": true
+									}
+								}
+							},
+							"uptime": {
+								"examples": {
+									"response": {
+										"value": "2 minutes"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"jwtAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"schemas": {
+			"User": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User's name."
+					},
+					"avatar": {
+						"type": "string",
+						"description": "A URL pointing to the User's avatar."
+					}
+				}
+			},
+			"Article": {
+				"type": "object",
+				"properties": {
+					"userId": {
+						"type": "string",
+						"description": "Article's owner."
+					},
+					"title": {
+						"type": "string",
+						"description": "The Article's title"
+					},
+					"text": {
+						"type": "string",
+						"description": "The Article's text"
+					},
+					"tags": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "The Article's tags. If the article has no tags, an empty array must be used."
+					}
+				}
+			},
+			"ErrorResponse": {
+				"properties": {
+					"message": {
+						"oneOf": [
+							"string",
+							"array"
+						],
+						"type": "string",
+						"description": "an explanatory text, in the form of a single string or an array of strings, informing about the nature of the error."
+					}
+				}
+			}
+		}
+	}
+}

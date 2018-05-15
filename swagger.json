@@ -15,11 +15,23 @@
 	"produces": [
 		"application/json"
 	],
+	"security": {
+		"jwtAuth": []
+	},
 	"paths": {
 		"/users": {
 			"post": {
 				"summary": "Create a User",
 				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "Authentication (JWT) Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "payload",
 						"in": "body",
@@ -51,6 +63,15 @@
 				"summary": "Create an Article",
 				"parameters": [
 					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "Authentication (JWT) Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
 						"name": "payload",
 						"in": "body",
 						"description": "JSON Payload",
@@ -77,6 +98,17 @@
 			},
 			"get": {
 				"summary": "Find all Articles",
+				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "Authentication (JWT) Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"200": {
 						"description": "Success",
@@ -100,6 +132,15 @@
 			"put": {
 				"summary": "Edit an Article",
 				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "Authentication (JWT) Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "id",
 						"in": "path",
@@ -141,6 +182,15 @@
 				"summary": "Delete an Article",
 				"parameters": [
 					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "Authentication (JWT) Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
 						"name": "id",
 						"in": "path",
 						"description": "The ID of the Article to be deleted",
@@ -158,40 +208,21 @@
 						}
 					}
 				}
-			},
-			"get": {
-				"summary": "Find all Articles (from all users) that contain the given tag(s)",
-				"parameters": [
-					{
-						"name": "tags",
-						"in": "path",
-						"description": "Comma-separated tags that must be contained in all the results.",
-						"required": true
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Success",
-						"schema": {
-							"type": "array",
-							"items": {
-								"$ref": "#/definitions/Article"
-							}
-						}
-					},
-					"500": {
-						"description": "Generic (Server) Error",
-						"schema": {
-							"$ref": "#/definitions/ErrorResponse"
-						}
-					}
-				}
 			}
 		},
 		"/articles/byTags/{tags}": {
 			"get": {
 				"summary": "Find all Articles (from all users) that contain the given tag(s)",
 				"parameters": [
+					{
+						"name": "Authorization",
+						"in": "header",
+						"description": "Authentication (JWT) Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "tags",
 						"in": "path",
@@ -288,6 +319,13 @@
 					"required": true
 				}
 			}
+		}
+	},
+	"securityDefinitions": {
+		"jwtAuth": {
+			"type": "apiKey",
+			"in": "header",
+			"name": "Authorization"
 		}
 	}
 }

@@ -14,13 +14,19 @@ const statusRoutes = require('./app/routes/status.routes.js');
 const userRoutes = require('./app/routes/user.routes.js');
 const articlesRoutes = require('./app/routes/article.routes.js');
 
+const env = process.env.NODE_ENV;
+
+if (env !== 'production') {
+	require('dotenv').config();
+}
+const errorHandlingMiddleware = require('./app/middlewares/error.handling.middleware.js');
+const securityMiddleware = require('./app/middlewares/security.middleware.js');
+
 const app = express();
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());		// must parse body before morganBody as body will be logged
-
-const env = process.env.NODE_ENV;
 
 if (env !== 'test') {
 	app.use(morgan(env === 'production' ? 'tiny' : 'dev'));
@@ -37,24 +43,14 @@ mongoose.Promise = global.Promise;
 
 tryDbConnection();
 
+app.all('*', securityMiddleware);
+
 statusRoutes(app);
 userRoutes(app);
 articlesRoutes(app);
 
-// Error handling: must be declared *after* all the routes have been defined
-app.use(function (err, req, res, next) {
-	if (err instanceof expressValidation.ValidationError) {
-		return res.status(err.status).json({
-			message: _.flatMap(err.errors, e => e.messages)
-		});
-	}
-	// other type of errors, it *might* also be a Runtime Error
-	if (env !== 'production') {
-		return res.status(500).send(err.stack);
-	} else {
-		return res.status(500);
-	}
-});
+// Error handling must be declared *after* all the routes have been defined
+app.use(errorHandlingMiddleware);
 
 // TODO Make http port configurable
 const httpPort = 3000;

@@ -198,8 +198,11 @@
 					}
 				],
 				"responses": {
-					"204": {
-						"description": "Success"
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/Article"
+						}
 					},
 					"500": {
 						"description": "Generic (Server) Error",

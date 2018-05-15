@@ -190,8 +190,15 @@
 					}
 				],
 				"responses": {
-					"204": {
-						"description": "Success"
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Article"
+								}
+							}
+						}
 					},
 					"500": {
 						"description": "Generic (Server) Error",

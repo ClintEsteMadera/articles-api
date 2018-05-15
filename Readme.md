@@ -2,6 +2,10 @@
 
 Simple Restful CRUD API that allows users to manage users and articles. Using Node.js, Express and MongoDB.
 
+## Pre-Requisites
+
+At the moment, this project needs a Mongo Server to be running in the localhost in order to work / run tests.
+
 ## Steps to Setup
 
 1. Install dependencies
@@ -14,6 +18,12 @@ npm install
 
 ```bash
 npm start
+```
+
+3. Run Tests
+
+```bash
+npm test
 ```
 
 You can browse the APIs at <http://localhost:3000/api-docs>
